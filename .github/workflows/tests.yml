@@ -1,0 +1,37 @@
+name: CI Pipeline with Tests
+
+on:
+  push:
+    branches:
+      - feat/github-actions
+  pull_request:
+    branches:
+      - feat/github-actions
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Vérifier le code du dépôt
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Installer Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12" # Version de Python compatible avec votre projet
+
+      # Installer les dépendances
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r api/requirements.txt # Assurez-vous que vos dépendances sont listées ici
+
+      # Exécuter les tests avec pytest
+      - name: Run tests
+        run: |
+          pytest api/tests/ --disable-warnings # Spécifiez le chemin où se trouvent vos tests
+
+ 
