@@ -1,0 +1,40 @@
+on:
+  push:
+    branches:
+      - workflow-test-python
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.11
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ secrets.TERRAFORM_PYTHON_VERSION }}
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Initialize Terraform
+        run: terraform init
+
+      - name: Validate Terraform
+        run: terraform validate
+
+      - name: Plan Terraform
+        run: terraform plan -out=tfplan
+
+      - name: Apply Terraform
+        if: github.ref == 'refs/heads/workflow-test-python'
+        run: terraform apply -auto-approve tfplan
