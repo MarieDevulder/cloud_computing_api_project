@@ -26,6 +26,9 @@ module "virtual_network" {
 
   python_app_subnet_name        = var.python_app_subnet_name
   python_app_subnet_address_space = var.python_app_subnet_address_space
+
+  application_gateway_subnet_name = var.application_gateway_subnet_name
+  application_gateway_subnet_address_space = var.application_gateway_subnet_address_space
 }
 
 module "database" {
@@ -75,4 +78,15 @@ module "app_service" {
     DATABASE_USERNAME = module.database.db_admin_username
     DATABASE_PASSWORD = module.database.db_admin_password
   }
+}
+
+module "application_gateway" {
+  source                              = "./modules/application_gateway"
+  resource_group_name                 = module.resource_group.resource_group_name
+  resource_group_location             = module.resource_group.resource_group_location
+  application_gateway_name            = var.application_gateway_name
+  application_gateway_sku             = var.application_gateway_sku
+  application_gateway_capacity        = var.application_gateway_capacity
+  application_gateway_frontend_ip_configuration = var.application_gateway_frontend_ip_configuration
+  subnet_id                           = module.virtual_network.application_gateway_subnet_id
 }
