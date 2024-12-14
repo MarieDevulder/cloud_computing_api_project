@@ -145,7 +145,7 @@ variable application_gateway_frontend_ip_configuration {
 variable app_service_name {
   description = "The name of the App Service"
   type        = string
-  default     = "atnmm-app-service"
+  default     = "atnmm-app-service-isenm2cloudproject"
 }
 
 variable app_service_plan_name {
@@ -154,6 +154,10 @@ variable app_service_plan_name {
   default     = "python-app-service-plan"
 }
 
+variable "new_relic_license_key" {
+  description = "The New Relic license key to use for monitoring"
+  type        = string
+}
 
 locals {
   blob_storage = {
